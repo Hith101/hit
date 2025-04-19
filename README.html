@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Gallery with Lightbox</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      /* Updated background with a gradient from peach to coral */
+      background: linear-gradient(45deg, #FF7E5F, #FEB47B);
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      max-width: 800px;
+      padding: 20px;
+    }
+    .gallery img {
+      width: 100%;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      border-radius: 5px;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      transition: opacity 0.3s ease;
+      opacity: 1;
+    }
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery">
+    <img src="download1.jpeg" alt="Image 1">
+    <img src="download2.jpeg" alt="Image 2">
+    <img src="download3.jpeg" alt="Image 3">
+    <img src="download4.jpeg" alt="Image 4">
+  </div>
+  
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <span class="close" id="close" tabindex="0" aria-label="Close">&times;</span>
+    <img id="lightbox-img" alt="">
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+      const closeBtn = document.getElementById("close");
+      const galleryImages = Array.from(document.querySelectorAll(".gallery img"));
+      const imageSources = galleryImages.map(img => img.src);
+      let currentIndex = 0;
+
+      // Open the lightbox with the selected image
+      function openLightbox(index) {
+        currentIndex = index;
+        lightboxImg.src = imageSources[currentIndex];
+        lightbox.style.display = "flex";
+        closeBtn.focus(); // Set focus for accessibility
+      }
+
+      // Close the lightbox
+      function closeLightbox() {
+        lightbox.style.display = "none";
+      }
+
+      // Show the next image with a fade effect
+      function showNextImage() {
+        currentIndex = (currentIndex + 1) % imageSources.length;
+        lightboxImg.style.opacity = 0;
+        setTimeout(() => {
+          lightboxImg.src = imageSources[currentIndex];
+          lightboxImg.style.opacity = 1;
+        }, 200);
+      }
+
+      // Show the previous image with a fade effect
+      function showPreviousImage() {
+        currentIndex = (currentIndex - 1 + imageSources.length) % imageSources.length;
+        lightboxImg.style.opacity = 0;
+        setTimeout(() => {
+          lightboxImg.src = imageSources[currentIndex];
+          lightboxImg.style.opacity = 1;
+        }, 200);
+      }
+
+      // Open lightbox on image click
+      document.querySelector(".gallery").addEventListener("click", function(e) {
+        if (e.target.tagName === "IMG") {
+          const index = galleryImages.indexOf(e.target);
+          openLightbox(index);
+        }
+      });
+
+      // Close lightbox on close button click
+      closeBtn.addEventListener("click", closeLightbox);
+
+      // Close lightbox if clicking outside the image
+      lightbox.addEventListener("click", function(e) {
+        if (e.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      // Keyboard navigation for accessibility
+      document.addEventListener("keydown", function(e) {
+        if (lightbox.style.display === "flex") {
+          if (e.key === "Escape") {
+            closeLightbox();
+          } else if (e.key === "ArrowRight") {
+            showNextImage();
+          } else if (e.key === "ArrowLeft") {
+            showPreviousImage();
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
