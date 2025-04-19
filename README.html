@@ -13,7 +13,7 @@
       justify-content: center;
       min-height: 100vh;
       margin: 0;
-      /* Updated background with a gradient from peach to coral */
+      
       background: linear-gradient(45deg, #FF7E5F, #FEB47B);
     }
     .gallery {
@@ -84,20 +84,19 @@
       const imageSources = galleryImages.map(img => img.src);
       let currentIndex = 0;
 
-      // Open the lightbox with the selected image
       function openLightbox(index) {
         currentIndex = index;
         lightboxImg.src = imageSources[currentIndex];
         lightbox.style.display = "flex";
-        closeBtn.focus(); // Set focus for accessibility
+        closeBtn.focus();
       }
 
-      // Close the lightbox
+      
       function closeLightbox() {
         lightbox.style.display = "none";
       }
 
-      // Show the next image with a fade effect
+   
       function showNextImage() {
         currentIndex = (currentIndex + 1) % imageSources.length;
         lightboxImg.style.opacity = 0;
@@ -107,7 +106,7 @@
         }, 200);
       }
 
-      // Show the previous image with a fade effect
+     
       function showPreviousImage() {
         currentIndex = (currentIndex - 1 + imageSources.length) % imageSources.length;
         lightboxImg.style.opacity = 0;
@@ -117,7 +116,7 @@
         }, 200);
       }
 
-      // Open lightbox on image click
+      
       document.querySelector(".gallery").addEventListener("click", function(e) {
         if (e.target.tagName === "IMG") {
           const index = galleryImages.indexOf(e.target);
@@ -125,17 +124,17 @@
         }
       });
 
-      // Close lightbox on close button click
+     
       closeBtn.addEventListener("click", closeLightbox);
 
-      // Close lightbox if clicking outside the image
+      
       lightbox.addEventListener("click", function(e) {
         if (e.target === lightbox) {
           closeLightbox();
         }
       });
 
-      // Keyboard navigation for accessibility
+     
       document.addEventListener("keydown", function(e) {
         if (lightbox.style.display === "flex") {
           if (e.key === "Escape") {
